@@ -2,8 +2,6 @@ locals {
   recommendationRds_id = aws_security_group.recommendationRds.id
 }
 
-
-
 provider "aws" {
     access_key = "${var.aws_access_key}"
     secret_key = "${var.aws_secret_key}"
@@ -12,7 +10,6 @@ provider "aws" {
 
 module "s3" {
     source = "./s3"
-   
     bucket_name = "reccomendation"       
 }
 
@@ -24,6 +21,7 @@ resource "aws_instance" "example_server" {
   tags = {
     Name = "reccomendationserver"
   }
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -36,17 +34,13 @@ inline = [
       "sudo npm install docker -y",
       "sudo systemctl start docker",
       "sudo systemctl enable docker"
-    ]
-
-  
-}
-}
+    ]  
+}}
 
 resource "aws_security_group" "recommendationRds" {
   name        = "reccomendation_security_group"
   description = "Allow ports 22, 8080, and 3000"
 
- 
   ingress {
     from_port   = 5432
     to_port     = 5432
@@ -84,8 +78,6 @@ resource "aws_security_group" "recommendationRds" {
 }
 
 
-
-
 resource "aws_db_instance" "default" {
   allocated_storage = 10
   engine = "postgres"
@@ -95,7 +87,6 @@ resource "aws_db_instance" "default" {
   password = var.db-password
   publicly_accessible   = true
   vpc_security_group_ids = [local.recommendationRds_id]
-  
   skip_final_snapshot = true // required to destroy
    
 }
