@@ -1,3 +1,9 @@
+locals {
+  recommendationRds_id = aws_security_group.recommendationRds.id
+}
+
+
+
 provider "aws" {
     access_key = "${var.aws_access_key}"
     secret_key = "${var.aws_secret_key}"
@@ -79,9 +85,6 @@ resource "aws_security_group" "recommendationRds" {
 
 
 
-locals {
-  recommendationRds_id = aws_security_group.recommendationRds.id
-}
 
 resource "aws_db_instance" "default" {
   allocated_storage = 10
