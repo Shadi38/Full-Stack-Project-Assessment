@@ -26,9 +26,10 @@ resource "aws_instance" "example_server" {
     connection {
       type        = "ssh"
       user        = "ubuntu"  
-      host        = self.public_ip
+      host        = self.public_ip  //This means that the host IP address for the SSH connection should be the public IP of the EC2
       private_key = file("/Users/shadifakhri/Downloads/recommendationKey.pem")
     }
+//ensures that npm and Docker are installed and running before deploying applications.
 inline = [
       "sudo npm update -y",
       "sudo npm install docker -y",
