@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
+<<<<<<< HEAD
 import "./App.css";
 import Videos from "./Videos.js";
 
@@ -8,6 +9,13 @@ function App() {
   const [showVideos, setShowVideos] = useState(false);
   const [loadVideo, setLoadVideo] = useState([]);
   const [order, setOrder] = useState("ase");
+=======
+  
+  
+  function cancelBtnHandler(e) {
+    props.setShow(false);
+  }
+>>>>>>> 1d0f65ee (creating yml file)
 
   useEffect(() => {
     const getData = async () => {
