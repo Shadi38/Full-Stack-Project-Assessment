@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
-<<<<<<< HEAD
 import "./App.css";
 import Videos from "./Videos.js";
 
@@ -9,19 +8,17 @@ function App() {
   const [showVideos, setShowVideos] = useState(false);
   const [loadVideo, setLoadVideo] = useState([]);
   const [order, setOrder] = useState("ase");
-=======
   
   
-  function cancelBtnHandler(e) {
-    props.setShow(false);
-  }
->>>>>>> 1d0f65ee (creating yml file)
+  // function cancelBtnHandler(e) {
+  //   props.setShow(false);
+  // }
 
   useEffect(() => {
     const getData = async () => {
       try {
         const response = await fetch(
-          "http://ec2-13-49-244-227.eu-north-1.compute.amazonaws.com:3000/videos"
+          "https://ec2-18-175-225-146.eu-west-2.compute.amazonaws.com:3000/videos"
         );
         if (!response.ok) {
           throw new Error("something went wrong");

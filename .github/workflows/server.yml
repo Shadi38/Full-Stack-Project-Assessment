@@ -36,12 +36,15 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v1
       with:
-        username: ${{ env.DOCKERHUB_USERNAME }}
-        password: ${{ env.DOCKERHUB_TOKEN }}
+        # username: ${{ env.DOCKERHUB_USERNAME }}
+        # password: ${{ env.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
     - name: Set permissions for private key
       run: |
-        echo "${{ env.AWS_PRIVATE_KEY }}" > my-new-key.pem
-        chmod 600 my-new-key.pem
+        echo "${{ secrets.AWS_PRIVATE_KEY }}" > my-new-key.pem
+        chmod 400 my-new-key.pem
     - name: Pull Docker image
       run: |
         ssh -o StrictHostKeyChecking=no -i my-new-key.pem ubuntu@ec2-13-49-244-227.eu-north-1.compute.amazonaws.com 'sudo docker pull shadi38/node-app:4.0'
@@ -51,4 +54,8 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i my-new-key.pem ubuntu@ec2-13-49-244-227.eu-north-1.compute.amazonaws.com 'sudo docker rm node-app:4.0 || true'
     - name: Run new container
       run: |
-        ssh -o StrictHostKeyChecking=no -i my-new-key.pem ubuntu@ec2-13-49-244-227.eu-north-1.compute.amazonaws.com 'sudo docker run -d --name node-app -p 3000:3000 shadi38/node-app:4.0'
+      ssh -o StrictHostKeyChecking=no -i my-new-key.pem ubuntu@ec2-13-49-244-227.eu-north-1.compute.amazonaws.com '
+        sudo docker stop node-app || true &&
+        sudo docker rm node-app || true &&
+        sudo docker run -d --name node-app --restart=always -p 3000:3000 shadi38/node-app:4.0
+    '

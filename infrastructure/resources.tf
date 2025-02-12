@@ -24,12 +24,6 @@ resource "aws_instance" "example_server" {
 
     }
     //ensures that npm and Docker are installed and running before deploying applications.
-    # inline = [
-    #   "sudo npm update -y",
-    #   "sudo npm install docker -y",
-    #   "sudo systemctl start docker",
-    #   "sudo systemctl enable docker"
-    # ]
     inline = [
     "sudo yum update -y",  # Update system packages
     "sudo yum install -y nodejs npm",  # Install Node.js and npm
@@ -88,7 +82,7 @@ resource "aws_db_instance" "default" {
   instance_class         = "db.t3.micro"
   db_name                = "recommendation"
   username               = "postgres"
-  password               = var.db-password
+  password               = var.db_password
   publicly_accessible    = true
   vpc_security_group_ids = [local.recommendationRds_id]
   skip_final_snapshot    = true // required to destroy
