@@ -11,10 +11,7 @@ resource "aws_s3_bucket_public_access_block" "example" {
   restrict_public_buckets = false
 }
 
-# resource "aws_s3_bucket_acl" "demos3_acl" {
-#   bucket = aws_s3_bucket.buckets3.id
-#   acl    = var.acl_value
-# }
+
 resource "aws_s3_bucket_policy" "public_access" {
   bucket = aws_s3_bucket.buckets3.id
 
@@ -29,3 +26,27 @@ resource "aws_s3_bucket_policy" "public_access" {
     }]
   })
 }
+
+resource "aws_s3_bucket_website_configuration" "static_website" {
+  bucket = aws_s3_bucket.buckets3.id
+  index_document {
+    suffix = "index.html"
+  }
+  error_document {
+    key = "error.html"
+  }
+}
+resource "aws_s3_object" "index_html" {
+  bucket       = aws_s3_bucket.buckets3.id
+  key          = "index.html"
+  source       = "../client/build/index.html"
+  content_type = "text/html"
+}
+
+resource "aws_s3_object" "error_html" {
+  bucket       = aws_s3_bucket.buckets3.id
+  key          = "error.html"
+  source       = "../client/build/error.html"
+  content_type = "text/html"
+}
+

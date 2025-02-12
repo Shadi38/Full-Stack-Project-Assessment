@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com/",
 };
 app.use(cors());
 require("dotenv").config(); // Load environment variables from .env file
@@ -29,13 +29,6 @@ app.get("/", function (req, res) {
   res.status(200).json("wellcome");
 });
 
-// app.get("/videos", function (req, res) {
-//   if (videos.length === 0) {
-//     return res.status(404).json({ error: "no videos found" });
-//   }
-//   res.json(videos);
-// });
-
 // GET "/videos"
 app.get("/videos", async function (req, res) {
   const result = await db.query("SELECT * FROM videos");
@@ -45,42 +38,7 @@ app.get("/videos", async function (req, res) {
   res.json(result.rows);
 });
 
-//ordering by assending and dessending for example /videos?order=asc
-// app.get("/videos", function (req, res) {
-//   if (videos.length === 0) {
-//     return res.status(404).json({ error: "no videos found" });
-//   }
-//   const order = req.query.order;
 
-//   let orderVideos;
-//   if (order === "asc") {
-//     orderVideos = videos.sort((a, b) => a.rating - b.rating);
-//   } else {
-//     // Default to descending order if order is not specified or is invalid
-//     orderVideos = videos.sort((a, b) => b.rating - a.rating);
-//   }
-
-//   return res.json(orderVideos);
-// });
-
-//ordering by assending and dessending for example /videos?order=asc
-// app.get("/videos", async function (req, res) {
-//   const result = await db.query("SELECT * FROM videos");
-//   if (result.rows.length === 0) {
-//     return res.status(404).json({ error: "no videos found" });
-//   }
-//   const order = req.query.order;
-//   let orderVideos;
-
-//   if (order === "asc") {
-//     orderVideos = result.rows.sort((a, b) => a.rating - b.rating);
-//   } else if (order === "desc") {
-//     orderVideos = result.rows.sort((a, b) => b.rating - a.rating);
-//   } else {
-//     return res.status(400).json({ error: "Invalid order parameter" });
-//   }
-//   return res.status(200).json(orderVideos);
-//});
 
 //ordering by assending and dessending for example /videos?order=asc
 app.get("/videos", async function (req, res) {
@@ -101,31 +59,6 @@ app.get("/videos", async function (req, res) {
   }
 });
 
-//adding new video
-// app.post(
-//   "/videos",
-//   [
-//     body("title", "text can't be empty").notEmpty(),
-//     body("url", "text can't be empty").notEmpty(),
-//   ],
-//   function (req, res) {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).send({
-//         error: errors.array(),
-//       });
-//     }
-//     const newVideo = {
-//       id: videos.length.toString(),
-//       title: req.body.title,
-//       url: req.body.url,
-//        rating:req.body.rating
-//     };
-//     videos.push(newVideo);
-//     res.status(201).json(videos);
-//   }
-// );
-
 //adding new id
 app.post(
   "/videos",
@@ -145,7 +78,6 @@ app.post(
     const newUrl = req.body.url;
     const newRating = req.body.rating;
     const query =
-      //// Include "RETURNING *" to return the newly created row
       "INSERT INTO videos (title, url, rating) VALUES($1, $2, $3) RETURNING *";
     db.query(query, [newTitle, newUrl, newRating], (err, result) => {
       if (err) {
@@ -171,16 +103,6 @@ app.get("/videos/search", function (req, res) {
 });
 
 //search video by id for example/videos/:id
-// app.get("/videos/:id", function (req, res) {
-//   const videoId = parseInt(req.params.id);
-//   const video = videos.find((m) => m.id === videoId);
-//   if (!video) {
-//     return res.status(404).send({ error: "This id doesn't exist" });
-//   }
-//   res.status(200).json( video );
-// });
-
-//search video by id for example/videos/:id
 app.get("/videos/:id", async function (req, res) {
   const videoId = req.params.id;
   const result = await db.query("SELECT * FROM videos where id=$1", [videoId]);
@@ -189,23 +111,6 @@ app.get("/videos/:id", async function (req, res) {
   }
   res.json(result.rows);
 });
-
-// //updating video with id
-// app.put("/videos/:id", function (req, res) {
-//   const video = videos.find((m) => m.id == req.params.id);
-//   if (!video) {
-//     return res.status(404).json({
-//       error: "This id doesn't exist",
-//     });
-//   }
-//   const newVideos = videos.map((video) => {
-//     if (video.id == req.params.id) {
-//       return { ...video, ...req.body };
-//     }
-//     return video;
-//   });
-//   res.json({ data: newVideos });
-// });
 
 //updating video with id
 app.put("/videos/:id", async function (req, res) {
@@ -221,17 +126,6 @@ app.put("/videos/:id", async function (req, res) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-//delete video
-// app.delete("/videos/:id", function (req, res) {
-//   const video = videos.find((m) => m.id == req.params.id);
-//   if (!video) {
-//     res.status(404).json("This id doesn't exist");
-//   }
-//   const index = videos.indexOf(video);
-//   videos.splice(index, 1);
-//   res.json(videos);
-// });
 
 //deleting video
 app.delete("/videos/:id", async function (req, res) {

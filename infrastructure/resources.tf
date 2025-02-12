@@ -25,13 +25,13 @@ resource "aws_instance" "example_server" {
     }
     //ensures that npm and Docker are installed and running before deploying applications.
     inline = [
-    "sudo yum update -y",  # Update system packages
-    "sudo yum install -y nodejs npm",  # Install Node.js and npm
-    "sudo npm update -y",  # Update npm packages
-    "sudo yum install -y docker",  # Install Docker
-    "sudo systemctl start docker",  # Start Docker service
-    "sudo systemctl enable docker"  # Enable Docker to start on boot
-  ]
+      "sudo yum update -y",             # Update system packages
+      "sudo yum install -y nodejs npm", # Install Node.js and npm
+      "sudo npm update -y",             # Update npm packages
+      "sudo yum install -y docker",     # Install Docker
+      "sudo systemctl start docker",    # Start Docker service
+      "sudo systemctl enable docker"    # Enable Docker to start on boot
+    ]
   }
 }
 
