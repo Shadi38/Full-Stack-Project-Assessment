@@ -54,7 +54,7 @@ jobs:
         ssh -o StrictHostKeyChecking=no -i my-new-key.pem ubuntu@ec2-13-49-244-227.eu-north-1.compute.amazonaws.com 'sudo docker rm node-app:4.0 || true'
     - name: Run new container
       run: |
-      ssh -o StrictHostKeyChecking=no -i my-new-key.pem ubuntu@ec2-13-49-244-227.eu-north-1.compute.amazonaws.com '
+      ssh -o StrictHostKeyChecking=no -i my-new-key.pem ubuntu@ec2-13-49-244-227.eu-north-1.compute.amazonaws.com 
         sudo docker stop node-app || true &&
         sudo docker rm node-app || true &&
         sudo docker run -d --name node-app --restart=always -p 3000:3000 shadi38/node-app:4.0
