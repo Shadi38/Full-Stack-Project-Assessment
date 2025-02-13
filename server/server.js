@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com/",
+  origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com",
 };
-app.use(cors());
+app.use(cors(corsOptions));
 require("dotenv").config(); // Load environment variables from .env file
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -16,56 +16,41 @@ const { Pool } = require("pg");
 
 const db = new Pool({
   connectionString: process.env.DB_URL,
-  // user: process.env.DB_USER,
-  // host: process.env.DB_HOST,
-  // database: process.env.DB_NAME,
-  // password: process.env.DB_PASSWORD,
-  // port: process.env.DB_PORT,
-  //   ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: true } : false
 });
 
-//
 app.get("/", function (req, res) {
-  res.status(200).json("wellcome");
+  res.status(200).json("Welcome");
 });
 
-// GET "/videos"
+// GET "/videos" with optional order query
 app.get("/videos", async function (req, res) {
-  const result = await db.query("SELECT * FROM videos");
-  if (result.rows.length === 0) {
-    return res.json([]);
-  }
-  res.json(result.rows);
-});
+  const order = req.query.order;
 
-
-
-//ordering by assending and dessending for example /videos?order=asc
-app.get("/videos", async function (req, res) {
   try {
-    if (order !== "asc" && order !== "desc") {
-      return res.status(400).json({ error: "Invalid order parameter" });
-    }
-    const order = req.query.order;
-    let result;
+    let query = "SELECT * FROM videos";
     if (order === "asc") {
-      result = await db.query("SELECT * FROM videos ORDER BY rating ASC");
-    } else {
-      result = await db.query("SELECT * FROM videos ORDER BY rating DESC");
+      query += " ORDER BY rating ASC";
+    } else if (order === "desc") {
+      query += " ORDER BY rating DESC";
     }
-    return res.json(result.rows);
+
+    const result = await db.query(query);
+    if (result.rows.length === 0) {
+      return res.json([]);
+    }
+    res.json(result.rows);
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-//adding new id
+// Adding a new video
 app.post(
   "/videos",
   [
-    body("title", "text can't be empty").notEmpty(),
-    body("url", "text can't be empty").notEmpty(),
-    body("rating", " can't be empty").notEmpty(),
+    body("title", "Title can't be empty").notEmpty(),
+    body("url", "URL can't be empty").notEmpty(),
+    body("rating", "Rating can't be empty").notEmpty(),
   ],
   function (req, res) {
     const errors = validationResult(req);
@@ -90,7 +75,7 @@ app.post(
   }
 );
 
-//search video by query for example /videos/search?title=halleluja
+// Search video by title
 app.get("/videos/search", function (req, res) {
   const searchVideo = req.query.title;
   const filteredVideo = videos.filter((video) =>
@@ -102,17 +87,17 @@ app.get("/videos/search", function (req, res) {
   res.json(filteredVideo);
 });
 
-//search video by id for example/videos/:id
+// Get video by ID
 app.get("/videos/:id", async function (req, res) {
   const videoId = req.params.id;
-  const result = await db.query("SELECT * FROM videos where id=$1", [videoId]);
+  const result = await db.query("SELECT * FROM videos WHERE id=$1", [videoId]);
   if (result.rows.length === 0) {
-    return res.status(404).json({ error: "no videos found" });
+    return res.status(404).json({ error: "No videos found" });
   }
   res.json(result.rows);
 });
 
-//updating video with id
+// Update video rating by ID
 app.put("/videos/:id", async function (req, res) {
   const newId = req.params.id;
   const newRating = req.body.rating;
@@ -121,21 +106,21 @@ app.put("/videos/:id", async function (req, res) {
       newId,
       newRating,
     ]);
-    res.json(`video with id:${newId} updated`);
+    res.json(`Video with ID:${newId} updated`);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-//deleting video
+// Delete video by ID
 app.delete("/videos/:id", async function (req, res) {
   const videoId = req.params.id;
   try {
     const result = await db.query("DELETE FROM videos WHERE id=$1", [videoId]);
     if (result.rowCount === 0) {
-      return res.status(404).json(`Video with id ${videoId} not found`);
+      return res.status(404).json(`Video with ID ${videoId} not found`);
     }
-    res.json(`Video with id ${videoId} deleted`);
+    res.json(`Video with ID ${videoId} deleted`);
   } catch (error) {
     console.error("Error deleting video:", error);
     res.status(500).json({ error: "Internal Server Error" });
