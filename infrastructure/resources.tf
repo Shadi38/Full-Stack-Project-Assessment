@@ -86,6 +86,10 @@ resource "aws_db_instance" "default" {
   publicly_accessible    = true
   vpc_security_group_ids = [local.recommendationRds_id]
   skip_final_snapshot    = true // required to destroy
-
+  multi_az               = false
+  # Tags for organization (optional)
+  tags = {
+    Name = "RecommendationDatabase"
+  }
 }
 
