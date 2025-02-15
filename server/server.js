@@ -40,7 +40,8 @@ app.get("/videos", async function (req, res) {
     }
     res.json(result.rows);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("Error fetching videos:", error); // Log error for debugging
+    return res.status(500).json({ error: "Internal server error", details: error.message });
   }
 });
 
@@ -66,6 +67,7 @@ app.post(
       "INSERT INTO videos (title, url, rating) VALUES($1, $2, $3) RETURNING *";
     db.query(query, [newTitle, newUrl, newRating], (err, result) => {
       if (err) {
+        console.error("Error adding video:", err); // Log error for debugging
         res.status(500).send("Internal Server Error");
       } else {
         const createdVideo = result.rows[0];
@@ -90,11 +92,16 @@ app.get("/videos/search", function (req, res) {
 // Get video by ID
 app.get("/videos/:id", async function (req, res) {
   const videoId = req.params.id;
-  const result = await db.query("SELECT * FROM videos WHERE id=$1", [videoId]);
-  if (result.rows.length === 0) {
-    return res.status(404).json({ error: "No videos found" });
+  try {
+    const result = await db.query("SELECT * FROM videos WHERE id=$1", [videoId]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No videos found" });
+    }
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error fetching video by ID:", error); // Log error for debugging
+    return res.status(500).json({ error: "Internal server error", details: error.message });
   }
-  res.json(result.rows);
 });
 
 // Update video rating by ID
@@ -102,13 +109,14 @@ app.put("/videos/:id", async function (req, res) {
   const newId = req.params.id;
   const newRating = req.body.rating;
   try {
-    const result = db.query("UPDATE videos SET rating=$2 WHERE id=$1", [
+    const result = await db.query("UPDATE videos SET rating=$2 WHERE id=$1", [
       newId,
       newRating,
     ]);
     res.json(`Video with ID:${newId} updated`);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error updating video rating:", error); // Log error for debugging
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 });
 
@@ -122,8 +130,8 @@ app.delete("/videos/:id", async function (req, res) {
     }
     res.json(`Video with ID ${videoId} deleted`);
   } catch (error) {
-    console.error("Error deleting video:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error deleting video:", error); // Log error for debugging
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 });
 
