@@ -55,22 +55,22 @@ jobs:
 
       - name: Pull Docker image
         run: |
-          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.175.225.146 'sudo docker pull shadi38/node-app:4.0'
+          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.132.98.88 'sudo docker pull shadi38/node-app:4.0'
 
       - name: Stop running container
         run: |
-          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.175.225.146 'sudo docker stop node-app || true'
-          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.175.225.146 'sudo docker rm node-app || true'
+          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.132.98.88 'sudo docker stop node-app || true'
+          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.132.98.88 'sudo docker rm node-app || true'
 
       - name: Create `.env` file on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.175.225.146 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.132.98.88 << 'EOF'
             echo "${{ secrets.SERVER_ENV_FILE }}" > .env
           EOF
 
       - name: Run new container with `.env`
         run: |
-          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.175.225.146 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.132.98.88 << 'EOF'
             sudo docker stop node-app || true
             sudo docker rm node-app || true
             sudo docker run -d --name node-app --restart=always -p 3000:3000 --env-file .env shadi38/node-app:4.0
