@@ -5,7 +5,12 @@ const cors = require("cors");
 //    origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com",
 // };
 // app.use(cors(corsOptions));
-app.use(cors());
+// app.use(cors());
+const corsOptions = {
+  origin: "*",  // Allow all origins
+};
+app.use(cors(corsOptions));
+
 
 require("dotenv").config(); // Load environment variables from .env file
 const bodyParser = require("body-parser");
