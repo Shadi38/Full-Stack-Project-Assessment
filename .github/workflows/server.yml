@@ -65,7 +65,7 @@ jobs:
       - name: Create `.env` file on EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.132.98.88 << 'EOF'
-            echo "${{ secrets.SERVER_ENV_FILE }}" > .env
+            echo "${{ secrets.SERVER_ENV_FILE }}" > /home/ec2-user/.env
           EOF
 
       - name: Run new container with `.env`
@@ -73,5 +73,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i my-new-key.pem ec2-user@18.132.98.88 << 'EOF'
             sudo docker stop node-app || true
             sudo docker rm node-app || true
-            sudo docker run -d --name node-app --restart=always -p 3000:3000 --env-file .env shadi38/node-app:4.0
+            sudo docker run -d --name node-app --restart=always -p 3000:3000 --env-file /home/ec2-user/.env shadi38/node-app:4.0
           EOF
