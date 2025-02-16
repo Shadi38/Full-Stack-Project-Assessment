@@ -217,7 +217,7 @@ resource "aws_db_instance" "default" {
   username               = "postgres"
   password               = var.db_password
   publicly_accessible    = true
-  vpc_security_group_ids = [aws_security_group.recommendationRds.id]
+  vpc_security_group_ids = [aws_security_group.recommendationRds.id] 
   skip_final_snapshot    = true
   multi_az               = false
   tags = {

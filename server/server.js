@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const corsOptions = {
-   origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com",
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//    origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com",
+// };
+// app.use(cors(corsOptions));
+app.use(cors());
+
 require("dotenv").config(); // Load environment variables from .env file
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
