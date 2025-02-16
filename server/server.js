@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com",
+   origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com",
 };
 app.use(cors(corsOptions));
 require("dotenv").config(); // Load environment variables from .env file
@@ -40,6 +40,7 @@ app.get("/videos", async function (req, res) {
     }
     res.json(result.rows);
   } catch (error) {
+    
     console.error("Error fetching videos:", error); // Log error for debugging
     return res.status(500).json({ error: "Internal server error", details: error.message });
   }

@@ -166,6 +166,12 @@ resource "aws_security_group" "recommendationRds" {
     protocol        = "tcp"
     security_groups = [aws_security_group.recommendationEc2.id] # Allow access from EC2 security group
   }
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = ["0.0.0.0/0"]
+  }
 
   ingress {
     from_port   = 22
@@ -205,7 +211,7 @@ resource "aws_db_instance" "default" {
   username               = "postgres"
   password               = var.db_password
   publicly_accessible    = true
-  vpc_security_group_ids = [aws_security_group.recommendationRds.id] 
+  vpc_security_group_ids = [aws_security_group.recommendationRds.id]
   skip_final_snapshot    = true
   multi_az               = false
   tags = {
