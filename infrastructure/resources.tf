@@ -87,6 +87,9 @@ resource "aws_security_group" "recommendationRds" {
   }
 }
 
+
+
+
 resource "aws_db_instance" "default" {
   allocated_storage      = 10
   engine                 = "postgres"
