@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, Routes, Link } from "react-router-dom"; // Removed BrowserRouter
+import { Route, Routes, Link } from "react-router-dom"; 
 
 import "./App.css";
 import Videos from "./Videos.js";
@@ -13,7 +13,7 @@ function App() {
     const getData = async () => {
       try {
         const response = await fetch(
-           "http://ec2-18-132-98-88.eu-west-2.compute.amazonaws.com:3000/videos"
+           "http://ec2-13-43-88-72.eu-west-2.compute.amazonaws.com:3000/videos"
         );
         if (!response.ok) {
           throw new Error("something went wrong");
