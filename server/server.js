@@ -1,11 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-// const corsOptions = {
-//    origin: "http://reccomendationsh.s3-website.eu-west-2.amazonaws.com",
-// };
-// app.use(cors(corsOptions));
-// app.use(cors());
+
 const corsOptions = {
   origin: "*",  // Allow all origins
 };
