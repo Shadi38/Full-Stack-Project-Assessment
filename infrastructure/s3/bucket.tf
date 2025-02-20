@@ -33,7 +33,7 @@ resource "aws_s3_bucket_website_configuration" "static_website" {
     suffix = "index.html"
   }
   error_document {
-    key = "error.html"
+    key = "index.html"
   }
 }
 resource "aws_s3_object" "index_html" {
@@ -43,10 +43,5 @@ resource "aws_s3_object" "index_html" {
   content_type = "text/html"
 }
 
-# resource "aws_s3_object" "error_html" {
-#   bucket       = aws_s3_bucket.buckets3.id
-#   key          = "error.html"
-#   source       = "../client/build/error.html"
-#   content_type = "text/html"
-# }
+
 
