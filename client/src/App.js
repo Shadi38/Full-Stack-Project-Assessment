@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from "react";
-import { Route, Routes, Link } from "react-router-dom"; 
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 
 import "./App.css";
 import Videos from "./Videos.js";

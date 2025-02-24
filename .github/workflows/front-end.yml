@@ -1,4 +1,33 @@
 
+# name: Upload Frontend
+# 'on':
+#   push:
+#     branches:
+#       - main
+#     # paths: null
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#       - name: Install dependencies
+#         run: npm install
+#         working-directory: ./client
+#       - name: Build app
+#         run: npm run build
+#         working-directory: ./client
+#       - name: Upload to S3
+#         uses: aws-actions/configure-aws-credentials@v2
+
+#         with:
+#           aws-access-key-id: '${{ secrets.AWS_ACCESS_KEY_ID }}'
+#           aws-secret-access-key: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+#           aws-region: eu-west-2
+#       - name: Deploy static site to S3 bucket
+#         run: aws s3 sync ./client/build s3://reccomendationsh --delete
 name: Upload Frontend
 'on':
   push:
@@ -8,6 +37,8 @@ name: Upload Frontend
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: --openssl-legacy-provider
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -17,11 +48,10 @@ jobs:
         run: npm install
         working-directory: ./client
       - name: Build app
-        run: NODE_OPTIONS=--openssl-legacy-provider npm run build
+        run: npm run build
         working-directory: ./client
       - name: Upload to S3
         uses: aws-actions/configure-aws-credentials@v2
-
         with:
           aws-access-key-id: '${{ secrets.AWS_ACCESS_KEY_ID }}'
           aws-secret-access-key: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
