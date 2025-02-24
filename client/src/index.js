@@ -26,16 +26,15 @@
 // );
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Router } from 'react-router-dom'; 
-import history from './history'; 
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
+import history from './history';
 import App from './App';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Router history={history}>
+  <HistoryRouter history={history}>
     <App />
-  </Router>
+  </HistoryRouter>
 );
-
 
