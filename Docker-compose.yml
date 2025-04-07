@@ -1,3 +1,4 @@
+# we use this file to run our containers
 version: '3'
 
 services:
@@ -6,5 +7,6 @@ services:
     container_name: nice_williamson
     restart: always
     ports:
+    #we map the container port to the host port -- host:container
       - "3000:3000"
     
