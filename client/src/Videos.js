@@ -91,7 +91,7 @@ function thumbUpHandeler(item) {
            }
            return video;
          });
-         console.log(updatedData);
+         
          setLoadVideo(updatedData);
        })
        .catch((error) => {
