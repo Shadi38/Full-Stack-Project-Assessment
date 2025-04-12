@@ -9,6 +9,7 @@ resource "aws_security_group" "recommendationEc2" {
   name        = "reccomendation_ec2_security_group"
   description = "Allow access to EC2"
   
+  //We allow inbound traffic on: Port 22 (SSH), Port 3000 (Node.js app), Port 8080 
   ingress {
     from_port   = 22
     to_port     = 22
@@ -29,7 +30,7 @@ resource "aws_security_group" "recommendationEc2" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] 
   }
-
+  //Allows all outbound traffic 
   egress {
     from_port   = 0
     to_port     = 0
@@ -39,15 +40,16 @@ resource "aws_security_group" "recommendationEc2" {
 }
 
 resource "aws_instance" "example_server" {
-  ami                    = "ami-0171207a7acd2a570"
+  ami                    = "ami-0171207a7acd2a570" //A specified AMI
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.recommendationEc2.id]
-  key_name               = "my-new-key"
+  key_name               = "my-new-key"  // key pair for SSH access
 
   tags = {
     Name = "reccomendationserver"
   }
 
+  //provisioner is used to run commands on a remote machine after it has been created by Terraform.
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -57,7 +59,7 @@ resource "aws_instance" "example_server" {
     }
 
     inline = [
-      "sudo yum update -y",
+      "sudo yum update -y",  // Update system packages
       "sudo yum install -y nodejs npm",
       "sudo npm update -y",
       "sudo yum install -y docker",
@@ -75,7 +77,8 @@ resource "aws_security_group" "recommendationRds" {
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    # security_groups = [aws_security_group.recommendationEc2.id]
+    //Allows inbound PostgreSQL traffic (port 5432) from the EC2 security group only 
+    //meaning only the EC2 instance can talk to the DB
     security_groups = [aws_security_group.recommendationEc2.id]
   }
 

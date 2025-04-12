@@ -1,10 +1,4 @@
-# FROM node:18-alpine
-# WORKDIR /app/server
-# COPY package*.json ./
 
-# RUN npm install
-# COPY /server .
-# CMD ["node","server.js"]
 FROM node:18-alpine
 
 # Set the working directory to /app/server
@@ -19,8 +13,8 @@ RUN npm install
 # Copy the rest of the server files
 COPY server/ .
 
-# Expose port 3000
+# the app run on port 3000 (container listen on this port)
 EXPOSE 3000
 
-# Define the command to run your app
+# Define the command to run the app
 CMD ["node", "server.js"]

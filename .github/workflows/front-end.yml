@@ -5,7 +5,7 @@ name: Upload Frontend
   push:
     branches:
       - main
-    # paths: null
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,12 +13,12 @@ jobs:
       NODE_OPTIONS: --openssl-legacy-provider
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3   #GitHub-provided checkout action to clone my repository into the runner.
+        uses: actions/checkout@v3   #GitHub-provided checkout action to clone the repository into the runner.
       - name: Set up Node.js
-        uses: actions/setup-node@v3  #Installs Node.js in the runner, so JavaScript commands can be executed.
+        uses: actions/setup-node@v3  #Installs Node.js in the runner, so JavaScript commands(npm install and npm run build) can be executed.
       - name: Install dependencies
-        run: npm install
-        working-directory: ./client
+        run: npm install             #npm install command should be executed inside the ./client folder where your frontend project resides.
+        working-directory: ./client 
       - name: Build app
         run: npm run build
         working-directory: ./client
@@ -29,6 +29,7 @@ jobs:
           aws-secret-access-key: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
           aws-region: eu-west-2
       - name: Deploy static site to S3 bucket
-        run: aws s3 sync ./client/build s3://reccomendationsh --delete  #Upload the build to S3 (aws s3 sync)
+      #uses the AWS CLI command "aws s3 sync" to upload the built frontend files (in ./client/build) to S3 bucket (s3://reccomendationsh).
+        run: aws s3 sync ./client/build s3://reccomendationsh --delete  
 
 

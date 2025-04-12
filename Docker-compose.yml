@@ -7,6 +7,8 @@ services:
     container_name: nice_williamson
     restart: always
     ports:
-    #we map the container port to the host port -- host:container
+    #we map the host(my laptop) port to the container port -- host:container
       - "3000:3000"
-    
+    #when I visit http://localhost:3000, the request goes to:
+    # Host port 3000
+    #Docker forwards it to container port 3000

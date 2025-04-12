@@ -90,6 +90,7 @@ app.get("/videos/search", function (req, res) {
     video.title.toLowerCase().includes(searchVideo.toLowerCase())
   );
   if (filteredVideo.length === 0) {
+    console.log("No matching videos found");
     res.status(404).json({ error: "No matching videos found" });
   }
   res.json(filteredVideo);
@@ -101,6 +102,7 @@ app.get("/videos/:id", async function (req, res) {
   try {
     const result = await db.query("SELECT * FROM videos WHERE id=$1", [videoId]);
     if (result.rows.length === 0) {
+      console.log("No videos found with that ID");
       return res.status(404).json({ error: "No videos found" });
     }
     res.json(result.rows);
