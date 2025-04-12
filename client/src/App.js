@@ -46,10 +46,7 @@ function App() {
     }
   }
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    setShowVideos(true);
-  }
+  
 
   return (
     <div className="App">
@@ -76,14 +73,8 @@ function App() {
           </button>
         </div>
         <div style={{ backgroundColor: "#55BCC9" }}></div>
-        <button onClick={()=>handleClick}>Videos</button>
-        <Videos
-              show={showVideos}
-              setShow={setShowVideos}
-              loadVideo={loadVideo}
-              setLoadVideo={setLoadVideo}
-            />
-        {/* <Link
+        
+        <Link
           to="/videos"
           style={{
             color: "#FC4445",
@@ -94,9 +85,9 @@ function App() {
           onClick={() => setShowVideos(true)}
         >
           Videos
-        </Link> */}
+        </Link>
       </nav>
-      {/* <Routes>
+      <Routes>
         <Route
           path="/videos"
           element={
@@ -108,7 +99,7 @@ function App() {
             />
           }
         />
-      </Routes> */}
+      </Routes>
 
     </div>
   );
