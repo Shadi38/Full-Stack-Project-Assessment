@@ -1,66 +1,58 @@
-# Video Recommendation App
+*Overall Architecture Diagram:
 
- I built a project that fulfills the following User Stories
-
-- As a user, I want to be able to view a list of all YouTube videos posted on the site
-- As a user, I want to be able to post videos that I like from YouTube to my website.
-- As a user, I want to be able to delete videos from the website that I no longer like.
-- As a user, I want to be able to watch the videos embedded in the website.
-- As a user, I want to be able to "Up Vote" a video if I like it.
-- As a user, I want to be able to "Down Vote" a video if I dislike.
-
-You don't need to worry about storing the video content itself - we'll rely on YouTube for this.
+ Client (Browser)  --->(with HTTP Request)--->  S3 Bucket (Frontend - React) --->  API Gateway  --->   
+ 
+ EC2 (Node.js Backend)Instance  --->  RDS (PostgreSQL) 
 
 
+1-Docker Architecture:
 
+Docker Container:
+┌────────────────────────────┐
+│ App (Node.js + Express)    │
+│                            │
+│ Exposes Port 3000          │
+│ Connected to PostgreSQL DB │
+└────────────────────────────┘
 
+docker-compose.yml maps:
 
-
-
-
-## Levels
-
-This project is split into several levels that you should complete each week of the three week project.
-
-You can find each of the levels split into separate files, linked below.
-
-**Note:** Some of the levels are optional which means that you will build a working project without them. However, to make something really impressive you will need to complete as much as you can.
-
-### Week 1 - Front End
-
-- [Level 100](./100.md)
-  - A core version of the React front end of the app
-- [Level 199](./199.md) (Optional)
-  - Stretch goals for the front end if you have time
-
-### Week 2 - Back End (without Database)
-
-- [Level 200](./200.md)
-  - A core version of the Node + Express back end of the app
-- [Level 250](./250.md)
-  - Connect your Front End and Back End together
-- [Level 299](./299.md) (Optional)
-  - Stretch goals for the back end if you have time
-
-### Week 3 - Back End (with Database)
-
-- [Level 300](./300.md)
-  - Integrate the back end with a database
-- [Level 399](./399.md) (Optional)
-  - Stretch goals for the database if you have time
-- [Level 999](./999.md) (Optional)
-  - More optional goals for if you have time
-
-## Sample Solution
-
-Here is an example solution of the Front End:
-
-https://vid-rec2.netlify.app/
+-Host port 3000 to container port 3000
+-Image is shadi38/node-app:4.0
 
 
 
-Here is an example solution for the Back End:
+2-CI/CD Pipeline (GitHub Actions):
 
-https://video-rec.herokuapp.com
+-Frontend CI/CD:
+GitHub → GitHub Actions:
+ ├── Checkout Code
+ ├── Install Dependencies
+ ├── Build React App
+ └── Upload to S3 (Bucket: recommendationsh)
 
+-Backend CI/CD (Node.js)
+GitHub → GitHub Actions:
+ ├── Build Docker Image
+ ├── Push to DockerHub (shadi38/node-app:4.0)
+ ├── Connect to EC2 via SSH
+ │    ├── Stop & remove old container
+ │    ├── Pull latest Docker image
+ │    └── Run new container with .env file
+
+
+
+3-Terraform Structure:
+
+Terraform Scripts:
+ ├── AWS Provider
+ ├── EC2 Instance for Backend
+ ├── Security Group (port 22 & 3000)
+ ├── S3 Bucket for Frontend
+ └── RDS PostgreSQL setup
+
+
+                
+                
+                
 
